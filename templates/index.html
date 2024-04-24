@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block content %}
+<br>
+<br>
+<br>
+<br>
+<div class="opis">
+<img src="{{desc['img']}}" width="300" height="300" alt="">
+<h1>{{desc['name']}}</h1>
+<p>{{desc['description']}}</p>
+</div>
+{% if current_user.is_authenticated %}
+    <a href="/mes/{{category}}/0" class="btn btn-outline-primary">Написать</a>
+{% endif %}
+<br>
+<br>
+{% for item in mes%}
+<div class="col-md6 bg-dark-subtle border rounded">
+    <div class='post__details' style="margin: 0px 10px 0px 10px;">
+        <a id="{{item.id}}" > №{{item.id}}  </a>  <p1>{{item.user.name}}, {{item.created_date}}</p1>
+    </div> {% if item.reply != 0 %}
+        <a href="#{{item.reply}}" style="margin: 0px 10px 0px 10px; color: #48a630"> >>{{item.reply}}  </a>
+    <div>
+    </div>
+{% endif %}
+    <div style="margin: 10px; font-size: 16px;">
+        {{ item.content.replace('[b]', '<b>').replace('[/b]', '</b>').replace('[i]', '<i>').replace('[/i]', '</i>').replace('[u]', '<u>').replace('[/u]', '</u>')   | safe }}
+    </div>
+    {% if item.url != "" %}
+        <img style="margin: 0px 10px 0px 10px; color: #48a630" src="{{item.url}}" width="300px" height="300px">
+    <div>
+    </div>
+{% endif %}
+    <a href="/mes/{{category}}/{{item.id}}" style="font-size: 10px;" class="btn btn-link">
+            Ответить
+    </a>
+    {% if current_user.is_authenticated and current_user.is_admin == True %}
+    <div>
+        <a href="/mes/{{ item.id }}" style="font-size: 10px;" class="btn btn-link">
+            Изменить
+        </a>
+        <a href="/mes_delete/{{ item.id }}" style="font-size: 10px;" class="btn btn-link">
+            Удалить
+        </a>
+    </div>
+{% endif %}
+</div>
+<br>
+{% endfor %}
+{% endblock %}
